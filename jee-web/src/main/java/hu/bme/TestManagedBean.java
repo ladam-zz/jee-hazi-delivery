@@ -23,12 +23,21 @@ public class TestManagedBean {
     private String name;
 	private String addr;
 	private String tel;
-	
+	private Boolean canEdit;
 	private String uname;
 	private String pwd;
 	private String dispatcher;
 	
-    public String getName() {
+	
+    public Boolean getCanEdit() {
+		return canEdit;
+	}
+
+	public void setCanEdit(Boolean canEdit) {
+		this.canEdit = canEdit;
+	}
+
+	public String getName() {
 		return name;
 	}
 
@@ -94,10 +103,14 @@ public class TestManagedBean {
 	public void deleteCustomer(Customer c) {
 		testSessionBean.deleteCustomer(c);
 	}
+	
+	public void editCustomer(Customer c) {
+		setCanEdit(true);
+		testSessionBean.editCustomer(c);
+	}
 
-	public void toEditCustomer(Customer c) {
-//		Redirect redirect = Redirect.getInstance();
-//		redirect.setViewId("/xxx.xhtml");
+	public void saveCustomer() {
+		testSessionBean.saveCustomer();
 	}
 	
 //--------------------------------- Delivery -----------------------------------------------

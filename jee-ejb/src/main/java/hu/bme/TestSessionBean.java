@@ -17,7 +17,17 @@ public class TestSessionBean {
     @PersistenceContext
     EntityManager em;
     
-//---------------------------------------- Delivery ----------------------------------------   
+    Boolean canEdit;
+    
+    public Boolean isCanEdit() {
+		return canEdit;
+	}
+
+	public void setCanEdit(Boolean canEdit) {
+		this.canEdit = canEdit;
+	}
+
+	//---------------------------------------- Delivery ----------------------------------------   
     public void addDelivery(String item, String senderID, String receiverID, String runnerID){
     	Customer sender = em.find(Customer.class, Long.valueOf(senderID));
     	Customer receiver = em.find(Customer.class, Long.valueOf(receiverID));
@@ -58,14 +68,19 @@ public class TestSessionBean {
     }
     
     public void deleteCustomer(Customer c) {
-		c = em.merge(c);
-		em.remove(c);
+		Customer removable = em.merge(c);
+		em.remove(removable);
 	}
+
+    public void editCustomer(Customer c){
+    	Customer managed = em.merge(c);
+    }
     
-    public Customer saveCustomer(Customer c) {
-		em.persist(c);
-		return c;
-	}
+     public void saveCustomer(){
+        for (Customer c : getCustomers()){
+           c.setCanEdit(false);
+        }		
+     }
 //---------------------------------------- Runner ----------------------------------------    
     public void addRunner(String name, String uname, String pwd, String tel, String dispatcher){
         Runner r= new Runner();
