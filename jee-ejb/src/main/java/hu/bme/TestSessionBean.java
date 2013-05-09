@@ -71,16 +71,11 @@ public class TestSessionBean {
 		Customer removable = em.merge(c);
 		em.remove(removable);
 	}
-
-    public void editCustomer(Customer c){
-    	Customer managed = em.merge(c);
-    }
     
-     public void saveCustomer(){
-        for (Customer c : getCustomers()){
-           c.setCanEdit(false);
-        }		
-     }
+    public void updateCategory(Customer c,String newnev){
+        c.setName(newnev);
+        em.merge(c);
+    }
 //---------------------------------------- Runner ----------------------------------------    
     public void addRunner(String name, String uname, String pwd, String tel, String dispatcher){
         Runner r= new Runner();

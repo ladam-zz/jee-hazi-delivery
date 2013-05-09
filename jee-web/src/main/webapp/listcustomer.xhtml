@@ -17,10 +17,7 @@
 		<hr />
 	</h:form>
 		<h3>
-			Ügyfelek (
-			<h:outputText
-				value="#{testManagedBean.testSessionBean.getCustomers().size()}" />
-			van a rendszerben)
+			Ügyfelek (<h:outputText value="#{testManagedBean.testSessionBean.getCustomers().size()}" />van a rendszerben)
 		</h3>
 		<h:form>
 			<h:dataTable value="#{testManagedBean.testSessionBean.getCustomers()}" var="customer"
@@ -28,37 +25,45 @@
 				rowClasses="TableOddRow,TableEvenRow">
 				<h:column>
 					<f:facet name="header">Név</f:facet>
-					<h:inputText value="#{customer.name}" size="10"
-						rendered="#{customer.canEdit}" />
-					<h:outputText value="#{customer.name}"
-						rendered="#{not customer.canEdit}" />
+					<h:inputText value="#{customer.name}" id="#{customer.id}aname" size="10"/>
 				</h:column>
 				<h:column>
 					<f:facet name="header">Cím</f:facet>
-					<h:inputText value="#{customer.addr}" size="20"
-						rendered="#{customer.canEdit}" />
-					<h:outputText value="#{customer.addr}"
-						rendered="#{not customer.canEdit}" />
+					<h:inputText value="#{customer.addr}" id="#{customer.id}aaddr" size="5"/>
 				</h:column>
 				<h:column>
 					<f:facet name="header">Telefonszám</f:facet>
-					<h:inputText value="#{customer.tel}" size="5"
-						rendered="#{customer.canEdit}" />
-					<h:outputText value="#{customer.tel}"
-						rendered="#{not customer.canEdit}" />
+					<h:inputText value="#{customer.tel}" id="#{customer.id}atel" size="5"/>
 				</h:column>
 				<h:column>
 					<f:facet name="header">Módosítás</f:facet>
-					<h:commandButton value="Módosítás" action="#{testManagedBean.editCustomer(customer)}" />
+					<h:commandButton value="Módosítás" class="XXX" id="#{customer.id}a" >
+						<f:param name="selectedName" value="#{(customer.id.toString()+nev).toString()}" />
+						<f:param name="selectedAddr" value="ghgfhgfh" />
+						<f:param name="selectedTel" value="ghgfhgfh" />
+					</h:commandButton>
 				</h:column>
 				<h:column>
 					<f:facet name="header">Delete</f:facet>
 					<h:commandButton value="Törlés" action="#{testManagedBean.deleteCustomer(customer)}"/>        
 				</h:column>
-			</h:dataTable>
-			<br />
-			<h:commandButton value="Save Customers"
-				action="#{userData.saveEmployees}" />
+			</h:dataTable>			
 		</h:form>
+<script type="text/javascript" src="http://code.jquery.com/jquery-1.4.3.min.js" />
+	<script type="text/javascript">
+	function jq(myid) { 
+		  return '#' + myid.replace(/(:|\.)/g,'\\$1');
+		}
+
+		$(document).ready(function() {
+			//alert("hello");			
+			$('.XXX').click(function() {
+				//var value = $("#"+this.id+"name").val()
+				id_name = jq(this.id+"name")
+				$(id_name).val();
+				
+			});
+		});
+	</script>
 </h:body>
 </html>

@@ -19,7 +19,6 @@ public class Customer implements Serializable {
     private String name;    
 	private String addr;
 	private String tel;
-	private Boolean canEdit;
 
 	@OneToMany(mappedBy="sender", cascade={CascadeType.ALL}, orphanRemoval=true)
 	private Collection<Delivery> deliveries_sended;
@@ -58,15 +57,6 @@ public class Customer implements Serializable {
 
 	public void setTel(String tel) {
 		this.tel = tel;
-	}
-	
-	
-	public Boolean getCanEdit() {
-		return canEdit;
-	}
-
-	public void setCanEdit(Boolean canEdit) {
-		this.canEdit = canEdit;
 	}
 
 	public Collection<Delivery> getDeliveries_sended() {
@@ -117,7 +107,7 @@ public class Customer implements Serializable {
 	@Override
 	public String toString() {
 		return "Customer [id=" + id + ", name=" + name + ", addr=" + addr
-				+ ", tel=" + tel + ", canEdit=" + canEdit
+				+ ", tel=" + tel
 				+ ", deliveries_sended=" + deliveries_sended
 				+ ", deliveries_received=" + deliveries_received + "]";
 	}

@@ -1,6 +1,7 @@
 package hu.bme;
 
 import java.lang.ProcessBuilder.Redirect;
+import java.util.Map;
 
 import hu.bme.entities.Customer;
 import hu.bme.entities.Runner;
@@ -8,6 +9,7 @@ import hu.bme.entities.Runner;
 import javax.ejb.EJB;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
+import javax.faces.context.FacesContext;
 
 @ManagedBean
 @RequestScoped
@@ -19,23 +21,14 @@ public class TestManagedBean {
     public TestSessionBean getTestSessionBean() {
         return testSessionBean;
     }
+    
 //--------------------------------- Customer & Runner -----------------------------------------------
     private String name;
 	private String addr;
 	private String tel;
-	private Boolean canEdit;
 	private String uname;
 	private String pwd;
 	private String dispatcher;
-	
-	
-    public Boolean getCanEdit() {
-		return canEdit;
-	}
-
-	public void setCanEdit(Boolean canEdit) {
-		this.canEdit = canEdit;
-	}
 
 	public String getName() {
 		return name;
@@ -104,15 +97,16 @@ public class TestManagedBean {
 		testSessionBean.deleteCustomer(c);
 	}
 	
-	public void editCustomer(Customer c) {
-		setCanEdit(true);
-		testSessionBean.editCustomer(c);
-	}
-
-	public void saveCustomer() {
-		testSessionBean.saveCustomer();
-	}
-	
+    public void updateCategory(Customer c){
+        FacesContext fc = FacesContext.getCurrentInstance();
+        String newname = getCustomerParam(fc);
+        testSessionBean.updateCategory(c,newname);
+    }
+    
+    public String getCustomerParam(FacesContext fc){          
+        Map<String,String> params = fc.getExternalContext().getRequestParameterMap();
+        return params.get("selectedCategory"); 
+    }
 //--------------------------------- Delivery -----------------------------------------------
     private String item;
     private String deliverySender;
