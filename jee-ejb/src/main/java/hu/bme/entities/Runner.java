@@ -25,7 +25,7 @@ public class Runner implements Serializable {
 	private String tel;
 	private Boolean dispatcher;
     
-	@OneToMany(mappedBy="runner")//,orphanRemoval=true, cascade={CascadeType.ALL})
+	@OneToMany(mappedBy="runner",cascade={CascadeType.ALL},orphanRemoval=true)
 	private Collection<Delivery> deliveries;
 	
 

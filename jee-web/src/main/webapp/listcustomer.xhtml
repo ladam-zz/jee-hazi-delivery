@@ -1,69 +1,51 @@
 <?xml version='1.0' encoding='UTF-8' ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml"
-	xmlns:h="http://java.sun.com/jsf/html"
-	xmlns:ui="http://java.sun.com/jsf/facelets"
-	xmlns:p="http://primefaces.org/ui"
-	xmlns:f="http://java.sun.com/jsf/core">
-<h:outputStylesheet library="css" name="style.css"  />
-<h:head>
-	<title>FutárEE</title>
-</h:head>
-<h:body>
-	<h:form>
-		<h:commandButton title="Új ügyfél létrehozása"
-			value="Új ügyfél létrehozása" action="create" />
-		<br />
-		<hr />
-	</h:form>
-		<h3>
-			Ügyfelek (<h:outputText value="#{testManagedBean.testSessionBean.getCustomers().size()}" />van a rendszerben)
-		</h3>
-		<h:form>
-			<h:dataTable value="#{testManagedBean.testSessionBean.getCustomers()}" var="customer"
-				styleClass="Table" headerClass="TableHeader"
-				rowClasses="TableOddRow,TableEvenRow">
-				<h:column>
-					<f:facet name="header">Név</f:facet>
-					<h:inputText value="#{customer.name}" id="#{customer.id}aname" size="10"/>
-				</h:column>
-				<h:column>
-					<f:facet name="header">Cím</f:facet>
-					<h:inputText value="#{customer.addr}" id="#{customer.id}aaddr" size="5"/>
-				</h:column>
-				<h:column>
-					<f:facet name="header">Telefonszám</f:facet>
-					<h:inputText value="#{customer.tel}" id="#{customer.id}atel" size="5"/>
-				</h:column>
-				<h:column>
-					<f:facet name="header">Módosítás</f:facet>
-					<h:commandButton value="Módosítás" class="XXX" id="#{customer.id}a" >
-						<f:param name="selectedName" value="#{(customer.id.toString()+nev).toString()}" />
-						<f:param name="selectedAddr" value="ghgfhgfh" />
-						<f:param name="selectedTel" value="ghgfhgfh" />
-					</h:commandButton>
-				</h:column>
-				<h:column>
-					<f:facet name="header">Delete</f:facet>
-					<h:commandButton value="Törlés" action="#{testManagedBean.deleteCustomer(customer)}"/>        
-				</h:column>
-			</h:dataTable>			
-		</h:form>
-<script type="text/javascript" src="http://code.jquery.com/jquery-1.4.3.min.js" />
-	<script type="text/javascript">
-	function jq(myid) { 
-		  return '#' + myid.replace(/(:|\.)/g,'\\$1');
-		}
-
-		$(document).ready(function() {
-			//alert("hello");			
-			$('.XXX').click(function() {
-				//var value = $("#"+this.id+"name").val()
-				id_name = jq(this.id+"name")
-				$(id_name).val();
-				
-			});
-		});
-	</script>
-</h:body>
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core">
+    <h:outputStylesheet library="css" name="style.css"  />
+    <h:head>
+        <title>FutárEE</title>
+    </h:head>
+    <h:body>
+        <h:form>
+            <h:commandButton title="Új ügyfél létrehozása"
+                             value="Új ügyfél létrehozása" action="createCustomer" />
+            <br />
+            <hr />
+        </h:form>
+        <h3>
+            Ügyfelek (<h:outputText value="#{testManagedBean.testSessionBean.getCustomers().size()}" />van a rendszerben)
+        </h3>
+        <h:form>
+            <h:dataTable value="#{testManagedBean.testSessionBean.getCustomers()}" var="customer"
+                         styleClass="Table" headerClass="TableHeader"
+                         rowClasses="TableOddRow,TableEvenRow">
+                <h:column>
+                    <f:facet name="header">Név</f:facet>
+                    <h:inputText value="#{customer.name}" size="10"/>
+                </h:column>
+                <h:column>
+                    <f:facet name="header">Cím</f:facet>
+                    <h:inputText value="#{customer.addr}" size="5"/>
+                </h:column>
+                <h:column>
+                    <f:facet name="header">Telefonszám</f:facet>
+                    <h:inputText value="#{customer.tel}" size="5"/>
+                </h:column>
+                <h:column>
+                    <h:link outcome="editcustomer" value="Szerkesztés">
+                        <f:param name="customerID" value="#{customer.id}" />
+                        <f:param name="customerName" value="#{customer.name}" />
+                        <f:param name="customerAddr" value="#{customer.addr}" />
+                        <f:param name="customerTel" value="#{customer.tel}" />
+                    </h:link>
+                </h:column>
+                <h:column>
+                    <!--<f:facet name="header">Delete</f:facet>-->
+                    <h:commandButton value="Törlés" action="#{testManagedBean.deleteCustomer(customer)}"/>        
+                </h:column>
+            </h:dataTable>			
+        </h:form>
+    </h:body>
 </html>
