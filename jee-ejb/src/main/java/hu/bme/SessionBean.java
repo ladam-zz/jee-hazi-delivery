@@ -39,6 +39,19 @@ public class SessionBean {
 		d = em.merge(d);
 		em.remove(d);
 	}
+    
+        public void updateDelivery(Long id,String item, Long senderID, Long receiverID, Long runnerID) {
+            Customer sender = em.find(Customer.class, senderID);
+            Customer receiver = em.find(Customer.class, receiverID);
+            Runner runner = em.find(Runner.class, runnerID);
+
+            Delivery d = em.find(Delivery.class, id);
+            d.setItem(item);
+            d.setSender(sender);
+            d.setReceiver(receiver);
+            d.setRunner(runner);
+            em.merge(d);
+    }    
 //---------------------------------------- Customer ----------------------------------------
     public void addCustomer(String name, String addr, String tel){
         Customer c= new Customer();
@@ -83,5 +96,13 @@ public class SessionBean {
 		r = em.merge(r);
 		em.remove(r);
 	}
-    
+    public void updateRunner(Long id,String uname,String name, String pwd,String tel,Boolean dispatcher) {
+        Runner r = em.find(Runner.class, id);
+        r.setUname(uname);
+        r.setName(name);
+        r.setPwd(pwd);
+        r.setTel(tel);
+        r.setDispatcher(dispatcher);
+        em.merge(r);
+    }    
 }

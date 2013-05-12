@@ -1,0 +1,55 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core">
+    <h:head>
+        <title>FutárEE</title>
+    </h:head>
+    <h:body>
+        <h3>Meglévő ügyfél adatainak módosítása:</h3>
+        <br />
+        <h:form>
+         <table border="1" width="50%">
+                <!--<table border="1" width="50%" styleClass="Table" headerClass="TableHeader" rowClasses="TableOddRow,TableEvenRow">-->            
+                <!--            <br />--><tr>
+                    <th>Cikk neve</th><td><h:inputText value="#{deliveryMBean.item}" /></td>
+                </tr>
+                <tr>
+                    <!--<br />-->
+                    <th>Küldő</th>
+                    <td> <h:selectOneMenu value="#{deliveryMBean.deliverySender}">
+                            <f:selectItems itemValue="#{customer.id}"
+                                           itemLabel="#{customer.name}"
+                                           value="#{deliveryMBean.sessionBean.customers}" var="customer" />
+                        </h:selectOneMenu></td>
+                    <!--<br />-->
+                </tr>
+                <tr>
+                    <th>Fogadó</th>
+                    <td><h:selectOneMenu value="#{deliveryMBean.deliveryReceiver}">
+                            <f:selectItems itemValue="#{customer.id}"
+                                           itemLabel="#{customer.name}"
+                                           value="#{deliveryMBean.sessionBean.customers}" var="customer" />
+                        </h:selectOneMenu></td>
+                    <!--<br />-->
+                </tr>
+                <tr>
+                    <th>Futár</th>
+                    <td><h:selectOneMenu value="#{deliveryMBean.deliveryRunner}">
+                            <f:selectItems itemValue="#{runner.id}"
+                                           itemLabel="#{runner.name}"
+                                           value="#{deliveryMBean.sessionBean.runners}" var="runner" />
+                        </h:selectOneMenu></td>
+                </tr>
+            </table>
+            <br />
+            <h:commandButton value="Módosítás"
+                             action="#{deliveryMBean.update}">
+                 <f:param name="id" value="#{deliveryMBean.id}" />
+            </h:commandButton>
+                    <br/><hr/>
+        <h:link value="Vissza" outcome="listdelivery" />
+        </h:form>
+    </h:body>
+</html>

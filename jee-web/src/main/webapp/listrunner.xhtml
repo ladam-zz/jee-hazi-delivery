@@ -1,0 +1,61 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core">
+     <h:outputStylesheet library="css" name="style.css"  />
+<h:head>
+	<title>FutárEE</title>
+</h:head>
+    <h:body>
+        <h:form>
+            <h:commandButton title="Új futár létrehozása"
+                             value="Új futár létrehozása" action="createRunner" />
+            <br />
+            <hr />
+        </h:form>
+        <h3>
+            Futárok (<h:outputText value="#{mainMBean.sessionBean.getRunners().size()}" /> van a rendszerben)
+        </h3>
+        <h:form>
+            <h:dataTable value="#{mainMBean.sessionBean.getRunners()}" var="runner"
+                         styleClass="Table" headerClass="TableHeader"
+                         rowClasses="TableOddRow,TableEvenRow">
+                <h:column>
+                    <f:facet name="header">Felhasználónév</f:facet>
+                    #{runner.uname}
+                </h:column>
+                <h:column>
+                    <f:facet name="header">Név</f:facet>
+                    #{runner.name}
+                </h:column>
+                <h:column>
+                    <f:facet name="header">Jelszó</f:facet>
+                    #{runner.pwd}
+                </h:column>
+                <h:column>
+                    <f:facet name="header">Telefonszám</f:facet>
+                    #{runner.tel}
+                </h:column>
+                <h:column>
+                    <f:facet name="header">Diszpécser jogosultság</f:facet>
+                    #{runner.dispatcher}
+                </h:column>
+                <h:column>
+                    <h:link outcome="editrunner" value="Szerkesztés">
+                        <f:param name="runnerID" value="#{runner.id}" />
+                        <f:param name="runnerUName" value="#{runner.uname}" />
+                        <f:param name="runnerName" value="#{runner.name}" />
+                        <f:param name="runnerPwd" value="#{runner.pwd}" />
+                        <f:param name="runnerTel" value="#{runner.tel}" />
+                        <f:param name="runnerDispatcher" value="#{runner.dispatcher}" />
+                    </h:link>
+                </h:column>
+                <h:column>
+                    <!--<f:facet name="header">Delete</f:facet>-->
+                    <h:commandButton value="Törlés" action="#{mainMBean.deleteRunner(runner)}"/>        
+                </h:column>
+            </h:dataTable>			
+        </h:form>
+    </h:body>
+</html>

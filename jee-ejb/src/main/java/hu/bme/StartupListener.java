@@ -30,6 +30,7 @@ public class StartupListener {
 			c2.setName("Zsuzsa");
 
 			Runner r = new Runner();
+                        r.setUname("runner1");
 			r.setName("Futár");
 
 			Delivery d = new Delivery();

@@ -1,15 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <faces-config version="2.0" xmlns="http://java.sun.com/xml/ns/javaee"
-        xmlns:xi="http://www.w3.org/2001/XInclude" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-        xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-facesconfig_2_0.xsd">
-<!--         <application> -->
-<!--                 <resource-bundle> -->
-<!--                         <base-name>hu.bme.messages</base-name> -->
-<!--                         <var>i18n</var> -->
-<!--                 </resource-bundle> -->
-<!--         </application> -->
+              xmlns:xi="http://www.w3.org/2001/XInclude" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+              xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-facesconfig_2_0.xsd">
+    <!--         <application> -->
+    <!--                 <resource-bundle> -->
+    <!--                         <base-name>hu.bme.messages</base-name> -->
+    <!--                         <var>i18n</var> -->
+    <!--                 </resource-bundle> -->
+    <!--         </application> -->
         
     <navigation-rule>
+        <!-- LISTING nav rules -->
+        
         <from-view-id>/listcustomer.xhtml</from-view-id>
         <navigation-case>
             <from-outcome>createCustomer</from-outcome>
@@ -21,10 +23,74 @@
         </navigation-case>
     </navigation-rule>
     <navigation-rule>
+        <from-view-id>/listrunner.xhtml</from-view-id>
+        <navigation-case>
+            <from-outcome>createRunner</from-outcome>
+            <to-view-id>/newrunner.xhtml</to-view-id>
+        </navigation-case>
+        <navigation-case>
+            <from-outcome>editrunner</from-outcome>
+            <to-view-id>/editrunner.xhtml</to-view-id>
+        </navigation-case>
+    </navigation-rule>
+    <navigation-rule>
+        <from-view-id>/listdelivery.xhtml</from-view-id>
+        <navigation-case>
+            <from-outcome>createDelivery</from-outcome>
+            <to-view-id>/newdelivery.xhtml</to-view-id>
+        </navigation-case>
+        <navigation-case>
+            <from-outcome>editDelivery</from-outcome>
+            <to-view-id>/editdelivery.xhtml</to-view-id>
+        </navigation-case>
+    </navigation-rule>
+    
+    <!-- NEW nav rules -->
+    
+    <navigation-rule>
+        <from-view-id>/newrunner.xhtml</from-view-id>
+        <navigation-case>
+            <from-outcome>saved</from-outcome>
+            <to-view-id>/listrunner.xhtml</to-view-id>
+        </navigation-case>
+    </navigation-rule>
+    <navigation-rule>
+        <from-view-id>/newcustomer.xhtml</from-view-id>
+        <navigation-case>
+            <from-outcome>saved</from-outcome>
+            <to-view-id>/listcustomer.xhtml</to-view-id>
+        </navigation-case>
+    </navigation-rule>
+    <navigation-rule>
+        <from-view-id>/newdelivery.xhtml</from-view-id>
+        <navigation-case>
+            <from-outcome>saved</from-outcome>
+            <to-view-id>/listdelivery.xhtml</to-view-id>
+        </navigation-case>
+    </navigation-rule>
+    
+    <!-- EDIT nav rules -->
+    
+    <navigation-rule>
         <from-view-id>/editcustomer.xhtml</from-view-id>
         <navigation-case>
             <from-outcome>Success!</from-outcome>
             <to-view-id>/listcustomer.xhtml</to-view-id>
         </navigation-case>
     </navigation-rule>
+    <navigation-rule>
+        <from-view-id>/editrunner.xhtml</from-view-id>
+        <navigation-case>
+            <from-outcome>Success!</from-outcome>
+            <to-view-id>/listrunner.xhtml</to-view-id>
+        </navigation-case>
+    </navigation-rule>
+    <navigation-rule>
+        <from-view-id>/editdelivery.xhtml</from-view-id>
+        <navigation-case>
+            <from-outcome>Success!</from-outcome>
+            <to-view-id>/listdelivery.xhtml</to-view-id>
+        </navigation-case>
+    </navigation-rule>
+
 </faces-config>

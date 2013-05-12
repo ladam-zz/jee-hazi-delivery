@@ -72,10 +72,6 @@ public class TestSessionBean {
 		em.remove(removable);
 	}
     
-    public void updateCategory(Customer c,String newnev){
-        c.setName(newnev);
-        em.merge(c);
-    }
 //---------------------------------------- Runner ----------------------------------------    
     public void addRunner(String name, String uname, String pwd, String tel, String dispatcher){
         Runner r= new Runner();

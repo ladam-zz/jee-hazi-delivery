@@ -10,16 +10,21 @@
         <h3>Új ügyfél felvétele:</h3>
         <br />
         <h:form>
-            Név<h:inputText value="#{mainMBean.name}" />
-            <br />
+            Felhasználónév<h:inputText value="#{mainMBean.uname}" /><br />
+            Valódi név<h:inputText value="#{mainMBean.name}" /><br />
+            Jelszó<h:inputText value="#{mainMBean.pwd}" /><br />
             Telefonszám<h:inputText value="#{mainMBean.tel}" />
             <br />
-            Szállítási cím<h:inputText value="#{mainMBean.addr}" />
-            <br />
+            Diszpécser jogosultság
+    	   <h:selectOneMenu value="#{mainMBean.dispatcher}">
+			<f:selectItem itemValue="false" itemLabel="Nem" />
+			<f:selectItem itemValue="true" itemLabel="Igen" />
+		</h:selectOneMenu>
+		<br />
             <h:commandButton value="Felvétel"
-                             action="#{mainMBean.doCustomer}"/>
+                             action="#{mainMBean.doRunner}"/>
         </h:form>
-                <br/><hr/>
-        <h:link value="Vissza" outcome="listcustomer" />
+        <br/><hr/>
+        <h:link value="Vissza" outcome="listrunner" />
     </h:body>
 </html>

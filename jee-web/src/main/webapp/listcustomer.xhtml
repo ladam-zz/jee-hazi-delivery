@@ -15,23 +15,23 @@
             <hr />
         </h:form>
         <h3>
-            Ügyfelek (<h:outputText value="#{testManagedBean.testSessionBean.getCustomers().size()}" />van a rendszerben)
+            Ügyfelek (<h:outputText value="#{mainMBean.sessionBean.getCustomers().size()}" /> van a rendszerben)
         </h3>
         <h:form>
-            <h:dataTable value="#{testManagedBean.testSessionBean.getCustomers()}" var="customer"
+            <h:dataTable value="#{mainMBean.sessionBean.getCustomers()}" var="customer"
                          styleClass="Table" headerClass="TableHeader"
                          rowClasses="TableOddRow,TableEvenRow">
                 <h:column>
                     <f:facet name="header">Név</f:facet>
-                    <h:inputText value="#{customer.name}" size="10"/>
+                    #{customer.name}
                 </h:column>
                 <h:column>
                     <f:facet name="header">Cím</f:facet>
-                    <h:inputText value="#{customer.addr}" size="5"/>
+                    #{customer.addr}
                 </h:column>
                 <h:column>
                     <f:facet name="header">Telefonszám</f:facet>
-                    <h:inputText value="#{customer.tel}" size="5"/>
+                    #{customer.tel}
                 </h:column>
                 <h:column>
                     <h:link outcome="editcustomer" value="Szerkesztés">
@@ -43,7 +43,7 @@
                 </h:column>
                 <h:column>
                     <!--<f:facet name="header">Delete</f:facet>-->
-                    <h:commandButton value="Törlés" action="#{testManagedBean.deleteCustomer(customer)}"/>        
+                    <h:commandButton value="Törlés" action="#{mainMBean.deleteCustomer(customer)}"/>        
                 </h:column>
             </h:dataTable>			
         </h:form>

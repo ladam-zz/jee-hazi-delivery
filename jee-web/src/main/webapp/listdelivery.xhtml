@@ -1,0 +1,56 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core">
+    <h:outputStylesheet library="css" name="style.css"  />
+    <h:head>
+        <title>FutárEE</title>
+    </h:head>
+    <h:body>
+        <h:form>
+            <h:commandButton title="Új küldemény létrehozása"
+                             value="Új küldemény létrehozása" action="createDelivery" />
+            <br />
+            <hr />
+        </h:form>
+        <h3>
+            Küldemények (<h:outputText value="#{mainMBean.sessionBean.getDeliveries().size()}" /> van a rendszerben)
+        </h3>
+        <h:form>
+            <h:dataTable value="#{mainMBean.sessionBean.getDeliveries()}" var="delivery"
+                         styleClass="Table" headerClass="TableHeader"
+                         rowClasses="TableOddRow,TableEvenRow">
+                <h:column>
+                    <f:facet name="header">Cikk neve</f:facet>
+                    #{delivery.item}
+                </h:column>
+                 <h:column>
+                    <f:facet name="header">Feladó</f:facet>
+                    #{delivery.sender.name}
+                </h:column>
+                <h:column>
+                    <f:facet name="header">Címzett</f:facet>
+                    #{delivery.receiver.name},#{delivery.receiver.addr}
+                </h:column>
+                <h:column>
+                    <f:facet name="header">Futár</f:facet>
+                    #{delivery.runner.name}
+                </h:column>
+                <h:column>
+                    <h:link outcome="editdelivery" value="Szerkesztés">
+                        <f:param name="deliveryID" value="#{delivery.id}" />
+                        <f:param name="deliveryItem" value="#{delivery.item}" />
+                         <f:param name="deliverySender" value="#{delivery.sender.id}" />
+                        <f:param name="deliveryReceiver" value="#{delivery.receiver.id}" />
+                        <f:param name="deliveryRunner" value="#{delivery.runner.id}" />
+                    </h:link>
+                </h:column>
+                <h:column>
+                    <!--<f:facet name="header">Delete</f:facet>-->
+                    <h:commandButton value="Törlés" action="#{mainMBean.deleteDelivery(delivery)}"/>        
+                </h:column>
+            </h:dataTable>			
+        </h:form>
+    </h:body>
+</html>

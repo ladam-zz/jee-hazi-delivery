@@ -13,10 +13,10 @@ import javax.faces.bean.RequestScoped;
 public class MainMBean {
 
     @EJB
-    private SessionBean SessionBean;
+    private SessionBean sessionBean;
 
     public SessionBean getSessionBean() {
-        return SessionBean;
+        return sessionBean;
     }
         
     private String name;
@@ -111,29 +111,29 @@ public class MainMBean {
     }
     
     public String doDelivery() {
-        SessionBean.addDelivery(item, deliverySender, deliveryReceiver, deliveryRunner);
-        return null;
+        sessionBean.addDelivery(item, deliverySender, deliveryReceiver, deliveryRunner);
+        return "saved";
     }
 
     public String doRunner() {
-        SessionBean.addRunner(name, uname, pwd, tel, dispatcher);
-        return null;
+        sessionBean.addRunner(name, uname, pwd, tel, dispatcher);
+        return "saved";
     }
 
     public String doCustomer() {
-        SessionBean.addCustomer(name, addr, tel);
-        return null;
+        sessionBean.addCustomer(name, addr, tel);
+        return "saved";
     }
 
     public void deleteCustomer(Customer c) {
-        SessionBean.deleteCustomer(c);
+        sessionBean.deleteCustomer(c);
     }
      
     public void deleteRunner(Runner r) {
-        SessionBean.deleteRunner(r);
+        sessionBean.deleteRunner(r);
     }
     
     public void deleteDelivery(Delivery d) {
-        SessionBean.deleteDelivery(d);
+        sessionBean.deleteDelivery(d);
     }
 }
