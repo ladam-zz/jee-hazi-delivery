@@ -8,6 +8,7 @@ import javax.ejb.LocalBean;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
 
 
 @Stateless
@@ -104,5 +105,21 @@ public class SessionBean {
         r.setTel(tel);
         r.setDispatcher(dispatcher);
         em.merge(r);
-    }    
+    }
+    
+    public boolean authRunner(String uname,String pwd){
+        
+        final Query query = em.createQuery("SELECT r FROM Runner r WHERE lower(r.uname) like :username");
+        query.setParameter("username", uname.toLowerCase());
+        List results = query.getResultList();
+        Runner foundRunner;
+        boolean isok = false;
+        if (!results.isEmpty()) {
+            // ignores multiple results
+            foundRunner = (Runner)results.get(0);
+            isok=foundRunner.getPwd().equals(pwd);
+        }
+        
+        return isok;
+    }
 }

@@ -8,10 +8,19 @@
     <!--                         <var>i18n</var> -->
     <!--                 </resource-bundle> -->
     <!--         </application> -->
-        
+    <!-- LISTING nav rules -->   
     <navigation-rule>
-        <!-- LISTING nav rules -->
-        
+        <from-view-id>/loginpage.xhtml</from-view-id>
+        <navigation-case>
+            <from-outcome>success</from-outcome>
+            <to-view-id>/succ_auth.xhtml</to-view-id>
+        </navigation-case>
+        <navigation-case>
+            <from-outcome>unauthorized</from-outcome>
+            <to-view-id>/failed_auth.xhtml</to-view-id>
+        </navigation-case>
+    </navigation-rule> 
+    <navigation-rule>       
         <from-view-id>/listcustomer.xhtml</from-view-id>
         <navigation-case>
             <from-outcome>createCustomer</from-outcome>

@@ -50,7 +50,7 @@ public class Runner implements Serializable {
 	}
 
 	public void setUname(String uname) {
-		this.uname = uname;
+		this.uname = uname.toLowerCase();
 	}
 
 	public String getPwd() {

@@ -1,0 +1,20 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core">
+    <head>
+        <title>FutárEE</title>
+    </head>
+    <body>
+        <h3>Bejelentkezés</h3>
+        <h:form>
+            Username:<h:inputText label="Username" value="#{loginBean.loginName}"/>
+            <br/>
+            Password:<h:inputSecret label="Password" value="#{loginBean.password}"/>
+            <br/>
+            <h:commandButton value="Login" action="#{loginBean.login}"/>
+            <h:outputText value="#{loginBean.result}"/>
+        </h:form>
+    </body>
+</html>
