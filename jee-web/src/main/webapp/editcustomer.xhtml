@@ -6,16 +6,39 @@
     <h:head>
         <title>FutárEE</title>
     </h:head>
-    <h:body>
+    <h:body rendered="#{loginBean.dispatcher}">
         <h3>Meglévő ügyfél adatainak módosítása:</h3>
         <br />
         <h:form>
-            Név<h:inputText value="#{customerMBean.name}" />
-            <br />
-            Telefonszám<h:inputText value="#{customerMBean.tel}" />
-            <br />
-            Szállítási cím<h:inputText value="#{customerMBean.addr}" />
-            <br />
+            <h:inputHidden value="#{customerMBean.id}" id="hiddenId" />
+            <table width="50%">
+                <tr><th>Név</th><td>
+                        <h:inputText value="#{customerMBean.name}" id="namef" required="true" requiredMessage="Megadása kötelező!"
+                                     validatorMessage="min 5 max 30!">
+                            <f:validateLength minimum="5" maximum="30"/>
+                        </h:inputText>
+                    </td>
+                    <td><h:message for="namef"/></td>
+                </tr>
+            <tr><th>Telefonszám</th>
+                <td>
+                    <h:inputText value="#{customerMBean.tel}" id="telf" required="true" requiredMessage="Megadása kötelező!"
+                                     validatorMessage="min 6 max 30!">
+                        <f:validateLength minimum="6" maximum="30"/>
+                    </h:inputText>
+                </td>
+                <td><h:message for="telf"/><h:messages globalOnly="true" /></td>
+            </tr>
+            <tr><th>Szállítási cím</th>
+                <td>
+                    <h:inputText value="#{customerMBean.addr}" id="addrf" required="true" requiredMessage="Megadása kötelező!"
+                                                            validatorMessage="min 6 max 100!">
+                        <f:validateLength minimum="6" maximum="100"/>
+                    </h:inputText>
+                </td>
+                <td><h:message for="addrf"/></td>
+            </tr>
+            </table>
             <h:commandButton value="Módosítás"
                              action="#{customerMBean.update}">
                  <f:param name="id" value="#{customerMBean.id}" />
@@ -23,5 +46,9 @@
         </h:form>
                         <br/><hr/>
         <h:link value="Vissza" outcome="listcustomer" />
+    </h:body>
+        <h:body rendered="#{!loginBean.dispatcher}">
+        <h3>Az oldal megtekintéséhez nincs meg a megfelelő jogosultság!</h3>
+        <h:link value="Bejelentkezés" outcome="loginpage"/>
     </h:body>
 </html>

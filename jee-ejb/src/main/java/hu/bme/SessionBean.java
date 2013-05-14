@@ -20,15 +20,17 @@ public class SessionBean {
 
 //---------------------------------------- Delivery ----------------------------------------   
     public void addDelivery(String item, String senderID, String receiverID, String runnerID){
-    	Customer sender = em.find(Customer.class, Long.valueOf(senderID));
-    	Customer receiver = em.find(Customer.class, Long.valueOf(receiverID));
-    	Runner runner = em.find(Runner.class, Long.valueOf(runnerID));
-    	
     	Delivery d=new Delivery();
+        
+        Customer sender = em.find(Customer.class, Long.valueOf(senderID));
+    	Customer receiver = em.find(Customer.class, Long.valueOf(receiverID));
+    	if(runnerID != null && !runnerID.isEmpty() && !runnerID.trim().isEmpty()){
+        Runner runner = em.find(Runner.class, Long.valueOf(runnerID));
+        d.setRunner(runner);}        
         d.setItem(item);
         d.setSender(sender);
         d.setReceiver(receiver);
-        d.setRunner(runner);
+        
         em.persist(d);
     }
 
@@ -36,20 +38,29 @@ public class SessionBean {
         return (List<Delivery>)em.createQuery("SELECT a FROM Delivery a").getResultList();
     }
     
+    public List<Delivery> getFreeDeliveries(){
+        return (List<Delivery>)em.createQuery("SELECT d FROM Delivery d WHERE d.runner IS NULL").getResultList();
+        
+    }
+    
     public void deleteDelivery(Delivery d) {
 		d = em.merge(d);
 		em.remove(d);
 	}
     
-        public void updateDelivery(Long id,String item, Long senderID, Long receiverID, Long runnerID) {
+        public void updateDelivery(Long id,String item, Long senderID, Long receiverID, String runnerID) {
+            Delivery d = em.find(Delivery.class, id);
+            Runner runner = null;
             Customer sender = em.find(Customer.class, senderID);
             Customer receiver = em.find(Customer.class, receiverID);
-            Runner runner = em.find(Runner.class, runnerID);
-
-            Delivery d = em.find(Delivery.class, id);
+            if (runnerID != null && !runnerID.isEmpty() && !runnerID.trim().isEmpty()) {
+                runner = em.find(Runner.class, Long.valueOf(runnerID));               
+            }
+            d.setRunner(runner);
             d.setItem(item);
             d.setSender(sender);
             d.setReceiver(receiver);
+            
             d.setRunner(runner);
             em.merge(d);
     }    
@@ -97,9 +108,9 @@ public class SessionBean {
 		r = em.merge(r);
 		em.remove(r);
 	}
-    public void updateRunner(Long id,String uname,String name, String pwd,String tel,Boolean dispatcher) {
+    public void updateRunner(Long id,/*String uname,*/String name, String pwd,String tel,Boolean dispatcher) {
         Runner r = em.find(Runner.class, id);
-        r.setUname(uname);
+        //r.setUname(uname);
         r.setName(name);
         r.setPwd(pwd);
         r.setTel(tel);
@@ -107,19 +118,38 @@ public class SessionBean {
         em.merge(r);
     }
     
-    public boolean authRunner(String uname,String pwd){
-        
+    public Runner authRunner(String uname, String pwd) {
+        Runner r = null;
         final Query query = em.createQuery("SELECT r FROM Runner r WHERE lower(r.uname) like :username");
         query.setParameter("username", uname.toLowerCase());
         List results = query.getResultList();
-        Runner foundRunner;
-        boolean isok = false;
+        
         if (!results.isEmpty()) {
             // ignores multiple results
+           try { Runner foundRunner = null;
             foundRunner = (Runner)results.get(0);
-            isok=foundRunner.getPwd().equals(pwd);
+            if(foundRunner.getPwd()==null&&(pwd==null || pwd.isEmpty())) {
+                r= foundRunner;
+            } else{
+            if(foundRunner.getPwd().equals(pwd))
+                    r=foundRunner;
+                    }
+            } catch (NullPointerException npe) {
+                r = null;
+            }
+        }
+        
+        return r;
+    }
+     public boolean isuiqUName(String uname) {
+        final Query query = em.createQuery("SELECT r FROM Runner r WHERE lower(r.uname) like :username");
+        query.setParameter("username", uname.toLowerCase());
+        List results = query.getResultList();
+        boolean isok = false;
+        if (results.isEmpty()) {
+            isok=true;
         }
         
         return isok;
-    }
+     }
 }

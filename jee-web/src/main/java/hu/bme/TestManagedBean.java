@@ -97,11 +97,11 @@ public class TestManagedBean {
 		testSessionBean.deleteCustomer(c);
 	}
 	
-    public void updateCategory(Customer c){
+    /*public void updateCategory(Customer c){
         FacesContext fc = FacesContext.getCurrentInstance();
         String newname = getCustomerParam(fc);
         testSessionBean.updateCategory(c,newname);
-    }
+    }*/
     
     public String getCustomerParam(FacesContext fc){          
         Map<String,String> params = fc.getExternalContext().getRequestParameterMap();

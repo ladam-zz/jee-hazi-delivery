@@ -37,7 +37,7 @@ public class DeliveryMBean implements Serializable{
     public String update() {
         FacesContext fc = FacesContext.getCurrentInstance();
         String id_str = getIDParam(fc);
-        sessionBean.updateDelivery(Long.valueOf(id_str),item, Long.valueOf(deliverySender), Long.valueOf(deliveryReceiver),Long.valueOf(deliveryRunner));
+        sessionBean.updateDelivery(Long.valueOf(id_str),item, Long.valueOf(deliverySender), Long.valueOf(deliveryReceiver),deliveryRunner);
         return "Success!";
     }
         

@@ -6,11 +6,12 @@
     <h:head>
         <title>FutárEE</title>
     </h:head>
-    <h:body>
+    <h:body rendered="#{loginBean.dispatcher}">
         <h3>Meglévő ügyfél adatainak módosítása:</h3>
         <br />
         <h:form>
-         <table border="1" width="50%">
+         <table width="50%">
+             <h:inputHidden value="#{deliveryMBean.id}" id="hiddenId" />
                 <!--<table border="1" width="50%" styleClass="Table" headerClass="TableHeader" rowClasses="TableOddRow,TableEvenRow">-->            
                 <!--            <br />--><tr>
                     <th>Cikk neve</th><td><h:inputText value="#{deliveryMBean.item}" /></td>
@@ -37,6 +38,7 @@
                 <tr>
                     <th>Futár</th>
                     <td><h:selectOneMenu value="#{deliveryMBean.deliveryRunner}">
+                             <f:selectItem itemValue="" itemLabel=" " />
                             <f:selectItems itemValue="#{runner.id}"
                                            itemLabel="#{runner.name}"
                                            value="#{deliveryMBean.sessionBean.runners}" var="runner" />
@@ -51,5 +53,9 @@
                     <br/><hr/>
         <h:link value="Vissza" outcome="listdelivery" />
         </h:form>
+    </h:body>
+    <h:body rendered="#{!loginBean.dispatcher}">
+        <h3>Az oldal megtekintéséhez nincs meg a megfelelő jogosultság!</h3>
+        <h:link value="Bejelentkezés" outcome="loginpage"/>
     </h:body>
 </html>

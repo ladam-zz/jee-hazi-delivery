@@ -6,7 +6,7 @@
     <head>
         <title>FutárEE</title>
     </head>
-    <body>
+    <body rendered="#{loginBean.islogin}">
         <h3>Sikeres bejelentkezés!</h3>
         <h:link value="Tovább a főoldalra!" outcome="mainpage"/>
     </body>

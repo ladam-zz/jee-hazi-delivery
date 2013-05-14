@@ -4,17 +4,20 @@
  */
 package hu.bme;
 
+import hu.bme.entities.Runner;
+import java.io.Serializable;
 import javax.ejb.EJB;
 import javax.faces.bean.ManagedBean;
-import javax.faces.bean.RequestScoped;
+import javax.faces.bean.SessionScoped;
 
 /**
  *
  * @author karszak
  */
-@ManagedBean
-@RequestScoped
-public class LoginBean {
+
+@ManagedBean(name="loginBean")
+@SessionScoped
+public class LoginBean implements Serializable{
 
     /*@EJB
     private UserBean bean;*/
@@ -23,18 +26,22 @@ public class LoginBean {
     private String loginName;
     private String password;
     private String result;
+    private Long currRunnerID = null;
+    private boolean dispatcher = false;
+    private boolean islogin = false;
 
     public String login() {
-       boolean isok = sessionBean.authRunner(loginName, password);
+       
+        Runner runner = sessionBean.authRunner(loginName, password);
         
-        /*if (!password.equals("admin")) {
-            result = "wrong";
-            return null;
-      
-         }
-
-         bean.setUsername(loginName);*/
-        if (isok) {
+        if (runner != null) {
+            currRunnerID = runner.getId();
+            islogin = true;
+            try {
+                dispatcher = runner.getDispatcher().booleanValue();
+            } catch (NullPointerException npe) {
+                dispatcher = false;
+            }
             return "success";
         } else {
             return "unauthorized";
@@ -65,11 +72,33 @@ public class LoginBean {
         this.result = result;
     }
 
-/*    public UserBean getBean() {
-        return bean;
-    }
-*/
     public SessionBean getSessionBean() {
         return sessionBean;
     }
+
+    public Long getCurrRunnerID() {
+        return currRunnerID;
+    }
+
+    public void setCurrRunnerID(Long currRunnerID) {
+        this.currRunnerID = currRunnerID;
+    }
+    
+    public boolean isDispatcher() {
+        return dispatcher;
+    }
+
+    public void setDispatcher(boolean dispatcher) {
+        this.dispatcher = dispatcher;
+    }
+
+    public boolean isIslogin() {
+        return islogin;
+    }
+
+    public void setIslogin(boolean islogin) {
+        this.islogin = islogin;
+    }
+    
+    
 }

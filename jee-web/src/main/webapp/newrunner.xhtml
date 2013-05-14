@@ -6,25 +6,60 @@
     <h:head>
         <title>FutárEE</title>
     </h:head>
-    <h:body>
+    <h:body rendered="#{loginBean.dispatcher}">
         <h3>Új ügyfél felvétele:</h3>
         <br />
         <h:form>
-            Felhasználónév<h:inputText value="#{mainMBean.uname}" /><br />
-            Valódi név<h:inputText value="#{mainMBean.name}" /><br />
-            Jelszó<h:inputText value="#{mainMBean.pwd}" /><br />
-            Telefonszám<h:inputText value="#{mainMBean.tel}" />
-            <br />
-            Diszpécser jogosultság
-    	   <h:selectOneMenu value="#{mainMBean.dispatcher}">
-			<f:selectItem itemValue="false" itemLabel="Nem" />
-			<f:selectItem itemValue="true" itemLabel="Igen" />
-		</h:selectOneMenu>
-		<br />
-            <h:commandButton value="Felvétel"
-                             action="#{mainMBean.doRunner}"/>
+            <table  width="50%">
+                <tr><th>Felhasználónév</th><td><h:inputText value="#{mainMBean.uname}" id="unamef" required="true" requiredMessage="Megadása kötelező!"
+                                     validatorMessage="min 6 max 30!">
+                            <f:validateLength minimum="6" maximum="30"/>
+                        </h:inputText></td>
+                    <td><h:message for="unamef"/></td>
+                </tr>
+                <tr>
+                    <th>Valódi név</th>
+                    <td>
+                        <h:inputText value="#{mainMBean.name}" id="namef" required="true" requiredMessage="Megadása kötelező!"
+                                     validatorMessage="min 5 max 30!">
+                            <f:validateLength minimum="5" maximum="30"/>
+                        </h:inputText>
+                    </td>
+                    <td><h:message for="namef"/></td>
+                </tr>
+                <tr>
+                    <th>Jelszó</th>
+                    <td><h:inputText value="#{mainMBean.pwd}" id="pwdf" required="true" requiredMessage="Megadása kötelező!"
+                                                        validatorMessage="min 5 max 30!">
+                            <f:validateLength minimum="5" maximum="30"/>
+                        </h:inputText>
+                    </td>
+                    <td><h:message for="pwdf"/></td>
+                </tr>
+                <tr>
+                    <th>Telefonszám</th>
+                    <td>
+                        <h:inputText value="#{mainMBean.tel}" id="telf" required="true" requiredMessage="Megadása kötelező!"
+                                     validatorMessage="min 6 max 30!">
+                            <f:validateLength minimum="6" maximum="30"/>
+                        </h:inputText>
+                    </td>
+                    <td><h:message for="telf"/><h:messages globalOnly="true" /></td>
+                </tr>
+                <tr><th>Diszpécser jogosultság</th>
+                    <td><h:selectOneMenu value="#{mainMBean.dispatcher}">
+                            <f:selectItem itemValue="false" itemLabel="Nem" />
+                            <f:selectItem itemValue="true" itemLabel="Igen" />
+                        </h:selectOneMenu></td></tr>
+                </table>
+                <h:commandButton value="Felvétel"
+                                 action="#{mainMBean.doRunner}"/>            
         </h:form>
         <br/><hr/>
         <h:link value="Vissza" outcome="listrunner" />
+    </h:body>
+    <h:body rendered="#{!loginBean.dispatcher}">
+        <h3>Az oldal megtekintéséhez nincs meg a megfelelő jogosultság!</h3>
+        <h:link value="Bejelentkezés" outcome="loginpage"/>
     </h:body>
 </html>

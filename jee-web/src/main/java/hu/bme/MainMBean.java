@@ -3,14 +3,17 @@ package hu.bme;
 import hu.bme.entities.Customer;
 import hu.bme.entities.Delivery;
 import hu.bme.entities.Runner;
+import java.io.Serializable;
 
 import javax.ejb.EJB;
+import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
+import javax.faces.context.FacesContext;
 
 @ManagedBean
 @RequestScoped
-public class MainMBean {
+public class MainMBean implements Serializable {
 
     @EJB
     private SessionBean sessionBean;
@@ -116,13 +119,27 @@ public class MainMBean {
     }
 
     public String doRunner() {
-        sessionBean.addRunner(name, uname, pwd, tel, dispatcher);
-        return "saved";
+        if (!tel.matches("^([0-9\\(\\)\\/\\+ \\-]*)$")) {
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("regexp minta: ^([0-9\\(\\)\\/\\+ \\-]*)$"));
+            return null;
+        }
+        if(!sessionBean.isuiqUName(uname)) {
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("felhasználónév nem egyedi!"));
+            return null;
+        }
+        else {
+            sessionBean.addRunner(name, uname, pwd, tel, dispatcher);
+            return "saved";
+        }
     }
 
     public String doCustomer() {
+        if(!tel.matches("^([0-9\\(\\)\\/\\+ \\-]*)$")){
+            FacesContext.getCurrentInstance().addMessage(null,new FacesMessage("regexp pattern: ^([0-9\\(\\)\\/\\+ \\-]*)$"));
+        return null;
+        } else {
         sessionBean.addCustomer(name, addr, tel);
-        return "saved";
+        return "saved";}
     }
 
     public void deleteCustomer(Customer c) {
@@ -135,5 +152,10 @@ public class MainMBean {
     
     public void deleteDelivery(Delivery d) {
         sessionBean.deleteDelivery(d);
+    }
+    
+    public void owned(Delivery d, Long rid) {
+        String runner_str = rid.toString();
+        sessionBean.updateDelivery(d.getId(), d.getItem(), d.getSender().getId(), d.getReceiver().getId(), runner_str);
     }
 }

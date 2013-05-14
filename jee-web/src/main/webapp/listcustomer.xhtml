@@ -7,7 +7,7 @@
     <h:head>
         <title>FutárEE</title>
     </h:head>
-    <h:body>
+    <h:body rendered="#{loginBean.dispatcher}">
         <h:form>
             <h:commandButton title="Új ügyfél létrehozása"
                              value="Új ügyfél létrehozása" action="createCustomer" />
@@ -47,5 +47,9 @@
                 </h:column>
             </h:dataTable>			
         </h:form>
+    </h:body>
+    <h:body rendered="#{!loginBean.dispatcher}">
+        <h3>Az oldal megtekintéséhez nincs meg a megfelelő jogosultság!</h3>
+        <h:link value="Bejelentkezés" outcome="loginpage"/>
     </h:body>
 </html>

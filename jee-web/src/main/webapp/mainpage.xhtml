@@ -3,15 +3,38 @@
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:h="http://java.sun.com/jsf/html"
       xmlns:f="http://java.sun.com/jsf/core">
-    <head>
+    <h:outputStylesheet library="css" name="style.css"  />
+    <h:head>
         <title>FutárEE</title>
-    </head>
-    <body>
-        <h3><h:link value="Futárok listája/futár hozzáadása" outcome="listrunner"/></h3>
-        <h3><h:link value="Ügyfelek listája/ügyfél hozzáadása" outcome="listcustomer"/></h3>
-        <h3><h:link value="Küldemények listája/küldemény  hozzáadása" outcome="listdelivery"/></h3>
-        <h3><h:link value="Küldemények listája" outcome="listdelivery"/></h3>
-        <hr/>
-        <h3><h:link value="Teljesítetlen, saját küldemények listája" outcome="listowned"/></h3>
-    </body>
+    </h:head>
+    <h:body rendered="#{loginBean.islogin}">
+        <h3><h:link rendered="#{loginBean.dispatcher}" value="Futárok listája/futár hozzáadása" outcome="listrunner"/></h3>
+        <h3><h:link rendered="#{loginBean.dispatcher}" value="Ügyfelek listája/ügyfél hozzáadása" outcome="listcustomer"/></h3>
+        <h3><h:link rendered="#{loginBean.dispatcher}" value="Küldemények listája/küldemény  hozzáadása" outcome="listdelivery"/></h3>
+
+        <h:form>
+            <h:dataTable value="#{mainMBean.sessionBean.getFreeDeliveries()}" var="delivery"
+                         styleClass="Table" headerClass="TableHeader"
+                         rowClasses="TableOddRow,TableEvenRow">
+                <h:column>
+                    <f:facet name="header">Cikk neve</f:facet>
+                        #{delivery.item}
+                </h:column>
+                <h:column>
+                    <f:facet name="header">Feladó</f:facet>
+                        #{delivery.sender.name}
+                </h:column>
+                <h:column>
+                    <f:facet name="header">Címzett</f:facet>
+                    #{delivery.receiver.name},#{delivery.receiver.addr}
+                </h:column>
+                <h:column>
+                    <h:commandButton value="Elvállal" action="#{mainMBean.owned(delivery,loginBean.currRunnerID)}"/>        
+                </h:column>
+            </h:dataTable>
+        </h:form>
+    </h:body>
+    <h:body rendered="#{!loginBean.islogin}">
+        <h3>Az oldal megtekintéséhez be kell jelentkeznie! <h:link value="Bejelentkezés" outcome="loginpage"/></h3>
+    </h:body>
 </html>

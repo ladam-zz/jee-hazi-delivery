@@ -12,6 +12,7 @@ package hu.bme;
 import java.io.Serializable;
 import java.util.Map;
 import javax.ejb.EJB;
+import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.RequestScoped;
@@ -24,8 +25,6 @@ public class RunnerMBean implements Serializable{
     private SessionBean sessionBean;
     @ManagedProperty(value="#{param.runnerID}")
     private String id;
-    @ManagedProperty(value="#{param.runnerUName}")
-    private String uname;
     @ManagedProperty(value="#{param.runnerName}")
     private String name;
     @ManagedProperty(value="#{param.runnerPwd}")
@@ -36,10 +35,14 @@ public class RunnerMBean implements Serializable{
     private String dispatcher;
 
     public String update() {
+        if (!tel.matches("^([0-9\\(\\)\\/\\+ \\-]*)$")) {
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("regexp pattern: ^([0-9\\(\\)\\/\\+ \\-]*)$"));
+            return null;
+        } else {
         FacesContext fc = FacesContext.getCurrentInstance();
         String id_str = getIDParam(fc);
-        sessionBean.updateRunner(Long.valueOf(id_str),uname,name,pwd,tel,Boolean.valueOf(dispatcher));
-        return "Success!";
+        sessionBean.updateRunner(Long.valueOf(id_str),name,pwd,tel,Boolean.valueOf(dispatcher));
+        return "Success!";}
     }
         
     public String getIDParam(FacesContext fc){          
@@ -57,15 +60,6 @@ public class RunnerMBean implements Serializable{
 
     public void setId(String id) {
         this.id = id;
-    }
-
-    
-    public String getUname() {
-        return uname;
-    }
-
-    public void setUname(String uname) {
-        this.uname = uname;
     }
 
     public String getName() {

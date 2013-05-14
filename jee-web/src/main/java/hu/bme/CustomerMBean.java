@@ -12,6 +12,7 @@ package hu.bme;
 import java.io.Serializable;
 import java.util.Map;
 import javax.ejb.EJB;
+import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.RequestScoped;
@@ -32,10 +33,15 @@ public class CustomerMBean implements Serializable{
     private String tel;
 
     public String update() {
-        FacesContext fc = FacesContext.getCurrentInstance();
-        String id_str = getIDParam(fc);
-        sessionBean.updateCustomer(Long.valueOf(id_str),name,addr,tel);
-        return "Success!";
+        if (!tel.matches("^([0-9\\(\\)\\/\\+ \\-]*)$")) {
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("regexp pattern: ^([0-9\\(\\)\\/\\+ \\-]*)$"));
+            return null;
+        } else {
+            FacesContext fc = FacesContext.getCurrentInstance();
+            String id_str = getIDParam(fc);
+            sessionBean.updateCustomer(Long.valueOf(id_str), name, addr, tel);
+            return "Success!";
+        }
     }
         
     public String getIDParam(FacesContext fc){          
