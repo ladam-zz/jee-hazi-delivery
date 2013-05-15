@@ -97,13 +97,29 @@ Az entitásokat három osztály írja le, populálásukat a \verb+StartupListene
 	\item \verb+Runner+ -- futárok táblája
 \end{itemize}
 \begin{center}
-        \includegraphics[width=14cm]{entities.PNG}
+        \includegraphics[width=8cm]{entities.PNG}
 	\captionof{figure}{Entitások}
         \label{fig:entities}
 \end{center}
 
 \subsection{Üzleti logika}
 Az üzleti logikát a \verb+SessionBean+ osztály valósítja meg.
+\\Az egyes nézeteket az alábbi backing beanek működtetik:
+\begin{itemize}
+\item \verb+CustomerMBean+ -- Ügyfelek adatainak módosítása
+\item \verb+DeliveryMBean+ -- Küldemények adatainak módosítása
+\item \verb+LoginBean+ -- Bejelentkezés kezelése 
+\item \verb+MainMBean+  -- Backing bean listázása, új entitások létrehozása
+\item \verb+RunnerMBean+ -- Futárok adatainak módosítása
+\end{itemize}
+
+\newpage
+%\begin{landscape}
+\begin{center}
+	\includegraphics[width=14cm]{bbeans.png}
+		\captionof{figure}{Beanek}
+\end{center}
+%\end{landscape}
 
 \subsection{Webes réteg}
 A webes réteg állományai, egy-egy nézetet valósítanak meg JSF technológiával
@@ -123,26 +139,13 @@ A webes réteg állományai, egy-egy nézetet valósítanak meg JSF technológi�
 \item \verb+newrunner+ -- új futár felvétele
 \item \verb+succ_auth+ -- sikeres bejelentkezéskor megjelenő oldal
 \end{itemize}
-%
-Az egyes nézeteket az alábbi backing beanek működtetik:
-\begin{itemize}
-\item \verb+CustomerMBean+ -- Ügyfelek adatainak módosítása
-\item \verb+DeliveryMBean+ -- Küldemények adatainak módosítása
-\item \verb+LoginBean+ -- Bejelentkezés kezelése 
-\item \verb+MainMBean+  -- Backing bean listázása, új entitások létrehozása
-\item \verb+RunnerMBean+ -- Futárok adatainak módosítása
-\end{itemize}
 \begin{center}
-        \includegraphics[width=14cm]{nav_diag.png}
+        \includegraphics[width=13cm]{nav_diag.png}
         \captionof{figure}{Navigációs diagram}
         \label{fig:nav-diag}
 \end{center}
-\begin{center}
-        \includegraphics[width=14cm]{webclass.png}
-        \captionof{figure}{Backing beanek}
-        \label{fig:webclass}
-\end{center}
-\subsection{Webszolgáltatás }
+
+\subsection{Webszolgáltatás}
 \verb+ListAccDeliveryService+ -- kilistázza azon küldeményeket, amikhez tartozik futár
 (azaz elvállalta valaki a küldemény teljesítését)
 \end{document}
