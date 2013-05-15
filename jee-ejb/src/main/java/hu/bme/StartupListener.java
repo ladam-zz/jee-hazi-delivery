@@ -31,7 +31,9 @@ public class StartupListener {
 
 			Runner r = new Runner();
                         r.setUname("runner1");
-			r.setName("Futár");
+			r.setName("Futár Józsi");
+                        r.setDispatcher(Boolean.TRUE);
+                        r.setPwd("pwd");
 
 			Delivery d = new Delivery();
 
@@ -43,6 +45,11 @@ public class StartupListener {
 			em.persist(c);
 			em.persist(c2);
 			em.persist(r);
+                        Delivery d2 = new Delivery();
+                        d2.setItem("Toll");
+                        d2.setReceiver(c2);
+                        d2.setSender(c);
+                        em.persist(d2);
 		}
 	}
 }

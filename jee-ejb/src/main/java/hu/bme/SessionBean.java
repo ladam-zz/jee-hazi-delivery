@@ -43,6 +43,10 @@ public class SessionBean {
         
     }
     
+     public List<Delivery> getAcceptedDeliveries(){
+        return (List<Delivery>)em.createQuery("SELECT d FROM Delivery d WHERE d.runner IS NOT NULL").getResultList();        
+    }
+    
     public void deleteDelivery(Delivery d) {
 		d = em.merge(d);
 		em.remove(d);

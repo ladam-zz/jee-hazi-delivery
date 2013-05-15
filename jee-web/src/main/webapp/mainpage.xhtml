@@ -8,6 +8,7 @@
         <title>FutárEE</title>
     </h:head>
     <h:body rendered="#{loginBean.islogin}">
+        <h:form><h:commandButton value="Kijelentkezés" action="#{loginBean.logout}"/></h:form>
         <h3><h:link rendered="#{loginBean.dispatcher}" value="Futárok listája/futár hozzáadása" outcome="listrunner"/></h3>
         <h3><h:link rendered="#{loginBean.dispatcher}" value="Ügyfelek listája/ügyfél hozzáadása" outcome="listcustomer"/></h3>
         <h3><h:link rendered="#{loginBean.dispatcher}" value="Küldemények listája/küldemény  hozzáadása" outcome="listdelivery"/></h3>

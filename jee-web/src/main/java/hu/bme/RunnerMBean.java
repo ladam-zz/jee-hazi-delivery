@@ -39,9 +39,9 @@ public class RunnerMBean implements Serializable{
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("regexp pattern: ^([0-9\\(\\)\\/\\+ \\-]*)$"));
             return null;
         } else {
-        FacesContext fc = FacesContext.getCurrentInstance();
-        String id_str = getIDParam(fc);
-        sessionBean.updateRunner(Long.valueOf(id_str),name,pwd,tel,Boolean.valueOf(dispatcher));
+        /*FacesContext fc = FacesContext.getCurrentInstance();
+        String id_str = getIDParam(fc);*/
+        sessionBean.updateRunner(Long.valueOf(id),name,pwd,tel,Boolean.valueOf(dispatcher));
         return "Success!";}
     }
         

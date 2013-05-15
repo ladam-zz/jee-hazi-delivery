@@ -10,6 +10,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
+import javax.xml.bind.annotation.XmlTransient;
 
 @Entity
 public class Runner implements Serializable {
@@ -52,7 +53,7 @@ public class Runner implements Serializable {
 	public void setUname(String uname) {
 		this.uname = uname.toLowerCase();
 	}
-
+        @XmlTransient
 	public String getPwd() {
 		return pwd;
 	}
@@ -68,7 +69,7 @@ public class Runner implements Serializable {
 	public void setTel(String tel) {
 		this.tel = tel;
 	}
-
+        @XmlTransient
 	public Boolean getDispatcher() {
 		return dispatcher;
 	}

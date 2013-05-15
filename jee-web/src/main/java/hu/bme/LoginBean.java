@@ -47,6 +47,13 @@ public class LoginBean implements Serializable{
             return "unauthorized";
         }
     }
+    
+    public String logout() {
+        currRunnerID = null;
+        dispatcher = false;
+        islogin = false;
+        return "logged_out";
+    }
 
     public String getLoginName() {
         return loginName;

@@ -14,7 +14,12 @@
              <h:inputHidden value="#{deliveryMBean.id}" id="hiddenId" />
                 <!--<table border="1" width="50%" styleClass="Table" headerClass="TableHeader" rowClasses="TableOddRow,TableEvenRow">-->            
                 <!--            <br />--><tr>
-                    <th>Cikk neve</th><td><h:inputText value="#{deliveryMBean.item}" /></td>
+                    <th>Cikk neve</th><td><h:inputText value="#{deliveryMBean.item}" id="itef"
+                        required="true" requiredMessage="Megadása kötelező!"
+                                     validatorMessage="min 5 max 30!">
+                            <f:validateLength minimum="5" maximum="30"/>
+                        </h:inputText></td>
+                    <td><h:message for="itef"/></td>
                 </tr>
                 <tr>
                     <!--<br />-->
@@ -48,7 +53,6 @@
             <br />
             <h:commandButton value="Módosítás"
                              action="#{deliveryMBean.update}">
-                 <f:param name="id" value="#{deliveryMBean.id}" />
             </h:commandButton>
                     <br/><hr/>
         <h:link value="Vissza" outcome="listdelivery" />

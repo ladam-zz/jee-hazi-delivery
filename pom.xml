@@ -11,6 +11,22 @@
     <module>jee-web</module>
     <module>jee-ejb</module>
   </modules>
+  
+  <dependencyManagement>
+      <dependencies>
+          <dependency>
+              <groupId>com.sun.xml.ws</groupId>
+              <artifactId>jaxws-rt</artifactId>
+              <version>2.1.4</version>
+          </dependency>
+          <dependency>
+              <groupId>com.sun.xml.ws</groupId>
+              <artifactId>jaxws-tools</artifactId>
+              <version>2.1.4</version>
+          </dependency>
+      </dependencies>
+  </dependencyManagement>
+  
   <build>
     <plugins>
       <plugin>

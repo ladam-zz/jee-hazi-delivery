@@ -11,7 +11,9 @@
         <br />
         <h:form>
             <table  width="50%">
-                <h:inputHidden value="#{runnerMBean.id}" id="hiddenId" />
+                <div hidden="true">
+                <h:inputText value="#{runnerMBean.id}" id="hiddenId" />
+                </div>
                 <tr>
                     <th>Valódi név</th>
                     <td>
@@ -46,7 +48,6 @@
             </table>
             <h:commandButton value="Módosítás"
                              action="#{runnerMBean.update}">
-                <f:param name="id" value="#{runnerMBean.id}" />
             </h:commandButton>
         </h:form>
         <br/><hr/>

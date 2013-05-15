@@ -37,9 +37,9 @@ public class CustomerMBean implements Serializable{
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("regexp pattern: ^([0-9\\(\\)\\/\\+ \\-]*)$"));
             return null;
         } else {
-            FacesContext fc = FacesContext.getCurrentInstance();
-            String id_str = getIDParam(fc);
-            sessionBean.updateCustomer(Long.valueOf(id_str), name, addr, tel);
+            /*FacesContext fc = FacesContext.getCurrentInstance();
+            String id_str = getIDParam(fc);*/
+            sessionBean.updateCustomer(Long.valueOf(id), name, addr, tel);
             return "Success!";
         }
     }

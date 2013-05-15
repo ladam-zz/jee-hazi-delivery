@@ -5,6 +5,7 @@
 \usepackage[magyar]{babel}
 \usepackage{hyperref}
 \usepackage{pdflscape}
+\usepackage{caption}
 \usepackage{times}
 \usepackage{listings}
 \lstset{language=Java}
@@ -30,359 +31,118 @@
     urlcolor=blue
 }
 
+
+
 \begin{document}
 \begin{titlepage}
 	\pagestyle{empty}
 	\begin{center}
-		{\vfill \bf {\LARGE Küldemény nyilvántartó rendszer \\Fejlesztői dokumentáció\\[60pt]} \Large Szoftverfejlesztés J2EE platformon\\[90pt] Likker Ádám -- OXWQXX}
+		{\vfill \bf {\LARGE  \includegraphics[width=90mm,keepaspectratio]{BMElogo.png} \\[90pt] Küldemény nyilvántartó rendszer \\Fejlesztői dokumentáció\\[60pt]} \Large Szoftverfejlesztés J2EE platformon\\[90pt] Likker Ádám -- OXWQXX}
 	\end{center}
-	\newpage	
-	\tableofcontents
 \end{titlepage}
-\section{A feladat leírása}
-Kézzel kitöltött jelentések (Delivery Note-ok):
+\section{Célkitűzés}
+Alkalmazás, mely egy futárszolgálat számára nyújt belső adminisztrációs lehetőséget
+(a cég alkalmazottai használják a küldemények felvételére, számontartására, kézbesítéshez),
+valamint webszolgáltatás segítségével megtekinthetők az elvállalt küldemények.
+\section{Követelmények}
+\subsection{Funkcionális követelmények -- használati esetek}
+\begin{center}
+        \includegraphics[width=6cm]{usecase.PNG}
+	\captionof{figure}{Használati esetek}
+        \label{fig:ntier}
+\end{center}
+\subsubsection{Szerepkörök}
+Zárt rendszer, használata bejelentkezéshez kötött. Webszolgáltatást bárki elérheti.
+\\\textbf{Futár} -- látja a még nem teljesített rendeléseket, elvállalja, teljesíti őket
+(aki be van jelentkezve, az kerül automatikusan a teljesítéshez)
+\\\textbf{Diszpécser} -- felveszi a rendeléseket, összekapcsolja a címzetteket
+a küldeményekkel. Küldemények, futárok, címzettek feltöltése, törlése, módosítása
+
+\subsection{Nem funkcionális követelmények}
+Az alkalmazás legyen könnyen kezelhető, egyszerűen karbantartható. Legyen stabil (nem omlik össze, hibatűrő a bemenetekre). 
+\subsubsection{Fejlesztési/futtatási környezet}
 \begin{itemize}
-	\item Nem egyszerűen hozzáférhető Trouble Report-ok
-	\item Rengeteg régi, fel nem dolgozott Delivery Note
+	\item Windows vagy Linux operációs rendszer 
+	\item Java 7
+	\item Maven 3 build automatizációs eszköz
+\end{itemize}
+\section{Alkalmazás logika}
+N rétegű architektúrában került implementálásra az alkalmazás, vékony klienssel, MVC (model-view-controller) tervezési
+mintát szem előtt tartva.
+\begin{center}
+        \includegraphics[width=14cm]{n-tier.PNG}
+	\captionof{figure}{Az n rétegű architektúra}
+        \label{fig:ntier}
+\end{center}
+A projekt egy fő Maven projektből áll, ami három modult fog össze:
+\begin{itemize}
+        \item jee-ear: Az enterprise projekt csomagolásáért felelő rész
+        \item jee-ejb: Üzleti logika + beágyazott adatbázis
+        \item jee-web: Megjelenítés (webes technológia)
+\end{itemize}
+\subsection{Csomagok}
+\verb+hu.bme+\\
+\verb+hu.bme.entities+
+\subsection{Adatbázis}
+\begin{center}
+        \includegraphics[width=14cm]{er.PNG}
+	\captionof{figure}{Entitás relációs diagramja az alkalmazásnak}
+        \label{fig:ntier}
+\end{center}
+Apache Derby beágyazott relációs adatbázis-kezelő rendszert használ az alkalmazás.
+Az entitásokat három osztály írja le, populálásukat a \verb+StartupListener+ végzi:
+\begin{itemize}
+	\item \verb+Customer+ -- ügyfelek táblája
+	\item \verb+Delivery+ -- küldemények táblája
+	\item \verb+Runner+ -- futárok táblája
+\end{itemize}
+\begin{center}
+        \includegraphics[width=14cm]{entities.PNG}
+	\captionof{figure}{Entitások}
+        \label{fig:entities}
+\end{center}
+
+\subsection{Üzleti logika}
+Az üzleti logikát a \verb+SessionBean+ osztály valósítja meg.
+
+\subsection{Webes réteg}
+A webes réteg állományai, egy-egy nézetet valósítanak meg JSF technológiával
+(xhtml állományok), navigációs diagram \aref{fig:nav-diag}.~ábrán: 
+\begin{itemize}
+\item \verb+editcustomer+ -- adott ügyfél adatainak módosítása
+\item \verb+editdelivery+ -- adott küldemény adatainak módosítása
+\item \verb+editrunner+ -- adott küldemény adatainak módosítása
+\item \verb+failed_auth+ -- sikertelen bejelentkezéskor ide irányít át az alkalamzás
+\item \verb+listcustomer+ -- ügyfelek listázása
+\item \verb+listrunner+ -- futárok listázása
+\item \verb+listdelivery+ -- küldemények listázása
+\item \verb+loginpage+ -- bejelentkezésre szolgáló oldal
+\item \verb+mainpage+ -- fő oldal, innen lehet továbbhaladni a többi nézethez
+\item \verb+newcustomer+ -- új ügyfél felvétele
+\item \verb+newdelivery+ -- új küldemény felvétele
+\item \verb+newrunner+ -- új futár felvétele
+\item \verb+succ_auth+ -- sikeres bejelentkezéskor megjelenő oldal
 \end{itemize}
 %
-\begin{lstlisting}
-private String pwd;
-private String tel;
-	private Boolean dispatcher;
-\end{lstlisting}
-Elérkeztünk egyben a \textbf{listákhoz}, valamint a \emph{for} ciklushoz. Listák esetén többféle elem is megadható vegyesen a tömb elemeiként, illetve látható, hogy dinamikusan kezeli a Python még az egyszerű adattípusokat is -- \emph{append() segítségével új elem adható a tömbhöz}.
-\begin{lstlisting}
->>> for i in range(0,5):
-		array.append(i)
->>> print array
-		[0, 1, 2, 3, 4]
->>> array[2]='ez egy tomb'
->>> print array
-		[0, 1, 'ez egy tomb', 3, 4]
-\end{lstlisting}
-A \emph{while} ciklusban pedig megadjuk a logikai kifejezést a kulcsszó után. Sokkal érdekesebb a \emph{for} ciklus viselkedése: alap működése során egy objektum elemein halad végig. Fent a \emph{range} változóval adom meg, milyen tartományban fusson. Látható a Python szintaxisa is: egy blokk határait nem kapcsos zárójelek határolják, hanem négy szóköz vagy egy tabulátor. Valamint egy sor egy utasítás. Így rákényszerítik a programozót átlátható, szépen formázott kód írására.
-
-\textbf{Tuple/rekord} butított tömbként viselkedik: tartalma nem módosítható (csak létrehozás, törlés).
-\begin{lstlisting}
->>> tup1 = (50,)
->>> tup2 = tup1 + (69,85,'million')
->>> tup2
-(50, 69, 85, 'million')
-\end{lstlisting}
-
-\textbf{Szótár:} címkék mellé értékeket rendelhetünk, ha lekérdezzük a címkét, visszakapjuk az értéket.
-\begin{lstlisting}
->>> dic = {'neve' : 'Pisti', 'apa' : 'Tibi',
-'anya' : 'Rozi'}
->>> dic
-{'neve': 'Pisti', 'apa': 'Tibi', 'anya': 'Rozi'}
->>> dic['neve']
-'Pisti'
->>> del dic['anya']
->>> dic
-{'neve': 'Pisti', 'apa': 'Tibi'}
-\end{lstlisting}
-
-\textbf{If, else, elif} utasításokkal logikai vizsgálatokat tehetünk: ha a kifejezés értéke teljesül, az \emph{if} utasítás fut le, különben az \emph{else}. Az \emph{elif} utasítás az \emph{else if} rövidítése. Többek között ezért sincs a Pythonban \emph{switch-case} szerkezet. Az alábbi kódrészlet mutatja, hogyan viselkednek ezek az utasítások -- ha az \emph{if} nem teljesül, akkor a futás továbblép a következő \emph{elif}-re. Ha egyik sem teljesül, lefut az \emph{else} utasítás.
-\begin{lstlisting}
-if kifejezes:
-...
-elif kifejezes:
-...
-elif kifejezes:
-...
-else:
-...
-\end{lstlisting}
-
-\textbf{Kivételkezelés} segítségével ha fellép egy kivétel a \emph{try} blokkban, valamint le van kezelve egy \emph{except} ágban, akkor a vezérlés ott folytatódik az \emph{except} ágban, nem akad meg a szkript futása. A \emph{try} blokkban hívott függvények által kiváltott kivételt is lekezeli!
-\begin{lstlisting}
->>>def kill_all_but_one_space_and_alphabetic(string):
-	string = re.sub('^[\t\n\r\f\v\"]+','',string)
-	string = re.sub('[\t\n\r\f\v\"]+',' ',string)
-	string = re.sub("^[0-9\.]+",'',string)
-	return string
->>>try: kill_all_but_one_space_and_alphabetic(string)
->>>except TypeError as reszlet:
-	print('Futasi hiba kezelese:',reszlet)
-\end{lstlisting}
-
-\textbf{Függvények} is írhatóak természetesen Python segítségével. A \emph{def} kulcsszóval kezdődik definiálása, neve és paraméterlistája, majd ,,:'' után tabulátorral blokkosítva:
-\begin{lstlisting}
->>> def function(nev):
-	print 'hello: %s' % nev
->>> function('Ivett')
-hello: Ivett
-\end{lstlisting}
-Alapértelemezett érték is adható függvény paramétereinek, de csakis balról jobbra haladva. Ezt a függvény meghívásakor is be kell tartani!
-\begin{lstlisting}
->>> def osszead(x=0,y=0):
-	return x+y
->>> osszead() =>0
->>> osszead(-1,5) => 4
->>> osszead(5) => 5
->>> osszead(,-1)
-SyntaxError: invalid syntax
-\end{lstlisting}
-
-\subsubsection{Objektum orientált}
-A Pythonban minden adattípus objektum, a beépített típusokat is bővítheti a felhasználó! \textbf{Minden operátor felüldefiniálható} speciális nevű tagfüggvényekben.
-Példa az összeadásra és szorzásra:
-\begin{lstlisting}
-		+	__add__
-		*	__mul__
-\end{lstlisting}
-
-\textbf{Osztályok} -- egyben be szeretném mutatni az öröklődést, valamint azt, hogy a gyermekosztály felüldefiniálhatja, kibővítheti örökölt attribútumait/osztályait. Minden tagfüggvénynek \emph{self} paraméterrel kell kezdődnie, ez referencia saját magára, ezzel lehet a tagfüggvényen belül hivatkozni az adott objektum elemeire.
-\begin{lstlisting}
->>> class parentClass:
-	var1 = "string"
-	var2 = 5
-	def printVars(self):
-		print 'var1: ' + self.var1 + '\t' +
-		+ 'var2:' + str(self.var2)
->>> obj1 = parentClass()
->>> obj1.printVars() var1: string var2: 5
-\end{lstlisting}
-
-\textbf{Gyermekosztály}: minden objektum rendelkezik egy \_\_init\_\_(self) beépített konstruktorral is, amit itt felüldefiniálok. Ez lefut aamutomatikusan mindig, amikor létrehozom ennek az osztálynak egy példányát. Ezen kívül van még \_\_del\_\_ tagfüggvény is, ami az objektum megsemmisülésekor fut le.
-\begin{lstlisting}
->>> class childClass(parentClass):
-	var2 = "more string"
-	def __init__(self):
-		print "Jo napot kivanok mindenkinek!"
->>> obj2= childClass()
-	Jo napot kivanok mindenkinek!
->>> obj2.printVars()
-	var1: string var2: more string
-\end{lstlisting}
-%
-\newpage
-\section{Elvégzett munka ismertetése}
-A gyakorlat első felében egy fejletlenebb Word átalakítót (Antiword) használtam, azonban annak teszteléskor kiderült, hogy hiányosan konvertálja az állományokat. Előnye volt, hogy platformfüggetlen megoldás. Ellenben még akkor készült, amikor a Word még zárt formátum volt, ezért nem lehetett hozzá olyan szabad feldolgozót írni, ami kihasználhatta volna a Microsoft megoldásait. Azonban 2008-ban nyílttá tették, azóta a LibreOffice/OpenOffice megfelelően formázottan jeleníti meg azokat. Így itt csak ennek a megoldásait ismertetem.\\
-\textbf{Használt konfiguráció:}
-	\begin{itemize}
-		\item Ubuntu 10.10 \href{http://releases.ubuntu.com/10.10/}{http://releases.ubuntu.com/10.10/}
-		\item Python 2.7.3 \href{http://www.python.org/download/}{http://www.python.org/download/}
-		\item Beautiful Soup 4.1.0 \href{http://www.crummy.com/software/BeautifulSoup/}{http://www.crummy.com/software/BeautifulSoup/}
-		\item LibreOffice 3.3.4 \href{http://www.libreoffice.org/}{http://www.libreoffice.org/}
-		\item PyODConverter 1.2  -- \href{https://github.com/mirkonasato/pyodconverter}{https://github.com/mirkonasato/pyodconverter}
-	\end{itemize}
-				
-	A fejlesztés folyamán megkötéseket kellett tenni az operációs rendszer függetlenségét tekintve: a fejlesztést egy fejlettebb Python verzióban végeztem, míg a LibreOffice/OpenOffice egy régebbi változatot használ, illetve nincs külön telepítő a Python-Uno hídhoz Windowson. Ezért Windowson nehéz beállítani a PyUno Bridge megfelelő használatához szükséges környezetet, így a doc-html konverziót \textbf{Ubuntu 10.10}-ben végeztem. Ezt is ajánlom a futtatáshoz (Ubuntu 10.10+). A futtatáskor ugyanazok a lépések egyébként mindkét operációs rendszer tekintetében konverziótól eltekintve. Tehát ha kivesszük a szkriptből a html átalakításért felelős részt, ugyanúgy működik bármilyen operációs rendszerben, ami képes Python szkript futtatására, és fel van telepítve megfelelően a LibreOffice/OpenOffice.
-	
-	Először a Python-t kell telepíteni (2.7.1+), majd Windows esetében a Python fő könyvtárát a környezeti változókhoz (PATH). Következő lépés a Beautiful Soup modul hozzáadása a Python-hoz, mely legegyszerűbben a forrás segítségével telepíthető. Letöltése után kicsomagolva futtatni kell az ,,setup.py''-t, mely feltelepíti a kiegészítőt:
-\begin{verbatim}
-	python setup.py install
-\end{verbatim}
-
-	Következő lépés feltelepíteni a LibreOffice/OpenOffice-t. Ellenőrizni a következők meglétét: ,,python-uno'' csomag, illetve szkript -- ,,DocumentConverter.py'' (PyODConverter szkript), ,,parser.py'' (a feldolgozást végző szkript).
-\subsection{Használat}
-	A szkript futtatásához először egy könyvtárban kell lenniük:
-	\begin{itemize}
-		\item ,,DocumentConverter.py''
-		\item ,,parser.py''
-		\item ,,.doc'' állományok
-	\end{itemize}
-	A Terminálban először abba a könyvtárba kell navigálni, ahol az állományok találhatóak. A program futtatása a következő paranccsal történik:
-	\begin{verbatim}
-		python parser.py
-	\end{verbatim}
-	A futás eredményeként létrejön a html változat is, a dokumentumhoz tartozó képekkel. Továbbá létrejön a \emph{,,Statistic\_Requirement.csv''}. Ez tartalmazza tabulátorral elválasztva a TR-ek adatait. Megjelenítése feldolgozása lehetséges táblázatkezelő rendszerekkel (Microsoft Excel, LibreOffice Calc), valamint adatbázisba is importálható.
-	
-	CSV-t Excelben megjeleníteni a Data/Import external data/Import Data menüponton keresztül lehetséges. Elválasztónak alapértelmezetten tabulátor van beállítva, de tetszőleges elválasztó beállítható a szkriptben a \emph{,,glue''} változó átírásával. LibreOffice-nál is hasonló módon lehet importálni, vagy a megnyitáskor beállítani az elválasztót. \\
-	Így írom ki a megadott kimenetre egy tömb elemeit, melyet a \emph{,,glue''} karakterlánccal illesztek össze egy karakterlánccá:
-	\begin{verbatim}
-		# Output
-		fout_plain=open("Statistic_Requirement.csv","w")
-		# CSV separator
-		glue = '\t'
-		fout_plain.write(glue.join(SR)+'\n')
-		fout_plain.close()
-	\end{verbatim}
-	Az eredmények természetesen erősen függnek a dokumentum jól formázottságától is, olyan TR-ek nem jelennek meg a táblázatban, amikhez nem töltötték ki jól a TR számhoz tartozó mezőt. \emph{,,TR number with link to MHWeb (TR state / Answer code / explanation)''} cella tartalmát vizsgálja, ha ott talál érvényes TR-t, kiírja fájlba.
-	
-	A tesztesetek és TR-ek érzékeny információk, ezért azok helyett nem valós értékeket helyeztem el.
-	\begin{figure}[bth]
-		\centering
-		\resizebox{5cm}{!}{\includegraphics{hw_title.png}}
-		\caption{HW környezet és a teszt típusa}
-	\end{figure}
-	\begin{figure}[bth]
-		\centering
-		\resizebox{13.5cm}{!}{\includegraphics{TRs.png}}
-		\caption{TR-okat tartalmazó táblázat}
-	\end{figure}
-\begin{landscape}
-\hfill
-\begin{figure}[tbh]
-		\centering
-		\resizebox{20cm}{!}{\includegraphics{csv.png}}
-		\caption{CSV kimenet részlet}
-\end{figure}
-\end{landscape}
-\subsection{TR adatai -- adatstruktúra}
-\textbf{Az alábbi adatok jelennek meg minden TR-hez:}
+Az egyes nézeteket az alábbi backing beanek működtetik:
 \begin{itemize}
-	\item TC ID
-	\item TC szlogen
-	\item Rövid leírása a problémának
-	\item TR szám
-	\item TR hibás termék MHO
-	\item Hatása a forgalomra (Igen/Nem) [típus, \%]
-	\item (új/régi) / hibák száma
-	\item Miért kellett kiküldeni / komment / magyarázat / TR komolysága (SEB-I,C)
-	\item NSP típus
-	\item Teszt típus
-	\begin{itemize}
-		\item Rollback
-		\item Network Redundancy
-		\item NM Subsystem Regression
-		\item Maiden Installation/Wizard
-		\item Dummy Upgrade
-		\item Upgrade
-		\item LRT on target
-		\item SIM LRT (MAIA/MAIA-Light/32 bit/64-bit/Dicos-Linux/Dicos-Dicos)
-	\end{itemize}
+\item \verb+CustomerMBean+ -- Ügyfelek adatainak módosítása
+\item \verb+DeliveryMBean+ -- Küldemények adatainak módosítása
+\item \verb+LoginBean+ -- Bejelentkezés kezelése 
+\item \verb+MainMBean+  -- Backing bean listázása, új entitások létrehozása
+\item \verb+RunnerMBean+ -- Futárok adatainak módosítása
 \end{itemize}
-\subsection{Alkalmazáslogika}
-	A szkript váza alapvetően a doc/html átalakító meghívásából, valamint három egymásba ágyazott \emph{for} ciklusból áll. Az első ciklusban végigmegy az összes mappában található html állományon, a másodikban kikeresi a beolvasott html-ből a TR-eket tartalmazó táblázatokat, és a táblázatokban nem található adatokat is kikeresi a dokumentum adott fejezetéből. A harmadikban végigmegy az egyes sorokon. Itt kikeresi az összes táblát, amiben található TR:
-	\begin{lstlisting}
-	errors = soup.find_all(text=re.compile(
-	"^.*?TR(\s)*?number(\s)*?with(\s)*?link.*?"))
-	\end{lstlisting}
-	Látható minden lekérdezésen, hogy a reguláris kifejezések (regular expression) használata nem megkerülhető. Következő példa pedig a HW, azaz futtatási környezeteket keresi ki, mert több is megadható egy teszttípushoz, ahol vannak a TR-ek:
-	\begin{lstlisting}
-	hws = soup.find_all(text=re.compile(
-	"^.*?Used(\s)*?HW(\s)*?configuration.*?"))
-	\end{lstlisting}
-	\emph{stripped\_strings} generátor (csak azokat az elemeket adja vissza, amik megfelelnek a feltételeknek -- itt mindent, csak whitespace karaktereket nem) elvágja a cella tartalmát a whitespace karaktereknél: egy tömböt ad vissza, ezzel kikerülöm a Word által beszúrt sok fölösleges sortörést, tabulátort, formázást. Ennek elemeit adom meg egy tömbnek, ami a megformázva egy sorát adja majd a CSV állománynak, ami megfelel egy TR-nek és környezetének.
-	\begin{lstlisting}
-for error in errors:
-	...
-	for tr in 
-	error.find_parent("table").find_all("tr"):
-		...
-		tds = tr.find_all("td")
-		for index,td in enumerate(tds):
-			for st in td.stripped_strings:
-			adatok kinyerese tombbe
-	\end{lstlisting}
-	A \emph{kill\_all\_but\_one\_space\_and\_alphabetic(string)} függvény jól mutatja, hogy a mintaillesztés egyik nagy akadálya volt a Word által elhelyezett számtalan felesleges sortörés, tabulátor, azaz whitespace karakter. Először a karakterlánc elejéről leszedi az összes ilyen elemet, a közepéből pedig minden egyes előfordulás esetén (ha több is van egymás után) kicseréli egyetlen szóközre. Valamint a címek esetére hasznos volt a számozást is eltávolítani.
-	\begin{lstlisting}
-def kill_all_but_one_space_and_alphabetic(string):
-string = re.sub('^[\t\n\r\f\v\"]+','',string)
-string = re.sub('[\t\n\r\f\v\"]+',' ',string)
-string = re.sub("^[0-9\.]+",'',string)
-return string
-	\end{lstlisting}
-A \emph{get\_test\_type(title)} függvény mintaillesztéssel kikeresi a TR-hez tartozó teszttípust, majd azt adja vissza. Részlete:
-	%
-	\begin{lstlisting}
-def get_test_type(title):
-	title = (re.split(" on",title))[0]
-	if re.match('^.*rollback.*',title,re.I):
-		return "Rollback"
-	elif re.match('^.*?network(\s)*?
-redundancy.*?',title,re.I):
-		return 'Network Redundancy'
-	elif 
-re.match('^.*?nm(\s)*?subsystem(
-\s)*?regression.*?',title,re.I):
-		return 'NM Subsystem Regression'
-	...
-	\end{lstlisting}
-	
-	\textbf{Rowspan}: egy cella tartalma tartozhat több sorhoz is, ezért ezt a cella tartalma, pozíciója, ismétlődési száma eltárolódik a \emph{rowspan\_iter}, \emph{rowspan}, \emph{rowspan\_poz}, változókba -- több is lehet egy táblázatban, ezért tömbben kerülnek elhelyezésre. A first\_time tömb azt tartalmazza, hogy az i. elem először kerül e kiírásra. Erre azért volt szükség, mert külöben nem kerülne be az első sorba ahol előfordul, mivel másik <tr> tagba kerül a sor többi cellájától. Az alábbi kódrészletben helyezem el a kiírni kívánt rekord adatai között.
-%
-\begin{lstlisting}
-for i in range(0,len(rowspan)):
-	if rowspan_iter[i] >= 1 and 
-first_time[i] == False:
-		rowspan_iter[i] -= 1
-		TC[rowspan_poz[i]:rowspan_poz[i]] 
-		= [rowspan[i]]
-	elif first_time[i] == True:
-		first_time[i] = False
-\end{lstlisting}
-
-	Egy cellában több TR is található, ezeket szétválasztja a szkript, majd a sor összes adatát hozzárendeli az összes TR-hez, majd kiírja fájlba azokat. Valamint reguláris kifejezés alapján szűri meg az érvényes TR számmal rendelkező rekordokat a nem relevánsaktól -- két betűt 5 szám követ vagy SDP-vel kezdődik a sztring. A \emph{non\_utf} minden nem ascii karaktert kiszűr, mivel azoknak karakterkódja nagyobb 127-nél, így azokra pedig nem fut le a beépített \emph{for} ciklus (nem teljesül a futási feltétel).
-	\begin{lstlisting}
-if re.match('((^[a-z][a-z][0-9][0-9]
-[0-9][0-9][0-9])|(^SDP)).*?',TC[3],re.I):
-	more_TR = re.split(" ", TC[3])
-	for i in range(0,len(more_TR)):
-		if len(more_TR[i])== 7:
-			temp = []
-			temp.append(TC[0])
-			temp.append(TC[1])
-			temp.append(TC[2])
-			temp.append(more_TR[i])
-			temp.append(TC[4])
-			temp.append(TC[5])
-			temp.append(TC[6])
-			temp.append(TC[7])
-			temp.append(TC[8])
-			temp.append(TC[9])
-			row=glue.join(temp)
-non_utf = ''.join([x for x in row if ord(x) < 128])
-fout_plain.write(non_utf + '\n')
-	\end{lstlisting}
-%
-\section{Továbbfejlesztési tervek}
-\textbf{A megbeszélésen a további fejlesztési javaslatokat tették:}\\
-Ki kell bővíteni egy komplexebb rendszer részeként. Melynek végeredményeként: hibakezelés fejlesztése -- ehhez több idő és dokumentum kell tesztelésre. Hyperlinkekkel  kell ellátni a TR-eket, állapotukat online frissíteni.
-%
-\section{Tapasztalatok, vélemények}
-Egyszerű hallgatóként is befogadtak, kedvesen álltak hozzám a teljes részlegen ahová kerültem. Munkám végeztével gyakornoki állást ajánlottak, amit örömmel elfogadtam. Itt készítem diplomamunkámat is. Inspiráló munkakörnyezet, jó munkamorál jellemzi a céget versenyképes fizetéssel.
-%
-\newpage
-\section{Irodalom, és csatlakozó dokumentumok jegyzéke}
-\label{sec:irod}
-%\begin{itemize}
-%	\item Könyv: szerző, cím dőlt betűkkel, kiadó neve, kiadó városa, kiadás éve
-%	\item Újságcikk: szerző, „cím idézőjelek között”, újság neve dőlt betűkkel, évfolyam, szám, oldalak, kiadás éve
-%	\item Diplomadolgozat/disszertáció: szerző, cím dőlt betűkkel, oktatási intézmény, város, végzés éve
-%	\item Elektronikus forrás: teljes URL (átviteli protokoll megjelölésével), megtekintés időpontja percre pontosan
-%\end{itemize}
-\begin{thebibliography}{9}
-\bibitem{vid} Python Programming Tutorials -- Python oktató videók \href{http://www.youtube.com/course?list=ECEA1FEF17E1E5C0DA}{http://www.youtube.com/course?list=ECEA1FEF17E1E5C0DA}, 2012.08.31. 10:40
-\bibitem{soup} Beautiful Soup Documentation \href{http://www.crummy.com/software/BeautifulSoup/bs4/doc/}{http://www.crummy.com/software/BeautifulSoup/bs4/doc/}, 2012.08.31. 10:40
-\bibitem{hard} Learn Python The Hard Way, 2. kiadás \href{http://learnpythonthehardway.org/book/}{http://learnpythonthehardway.org/book/}, 2012.08.31. 10:40
-\end{thebibliography}
-%
-\newpage
-\section{Munkanapló}
-Az alábbi táblázatban található a szakmai gyakorlatom során végzett napi tevékenységem tömör összefoglalása:
-%
-\begin{table}[h!]
-\centering
-    \begin{tabular*}{\textwidth}{l||l|l@{\extracolsep{\fill}}}
-        \multirow{5}{*}{1. hét} & 2012.08.06. & Ismerkedés a vállalattal, körút az Ericssonnál \\ & 2012.08.07. & Python alapvető szintaxis, laborlátogatás\\ & 2012.08.08. & Ismerkedés a Python nyelvvel -- objektumok, osztályok \\ & 2012.08.09. & Jelölőnyelvek feldolgozására alkalmas modulok vizsgálata \\ & 2012.08.10. & Modulok tesztelése, példa szkriptek előállítása, vizsgálata\\ \hline
-		\multirow{6}{*}{2. hét} & \multirow{2}{*}{2012.08.13.} & Megfelelő modul megtalálása a Word dokumentációk \\ & & feldolgozásához, mivel lehet azt jelölőnyelvvé alakítani \\ & 2012.08.14. & Modulok, megoldások tesztelése \\ & 2012.08.15. & Antiword kimetének feldolgozása \\ & 2012.08.16. & Antiword feldolgozott kimenetének vizsgálata \\ & 2012.08.17. & Eredmények összevetése az eredeti táblázattal \\ \hline
-		\multirow{5}{*}{3. hét} & 2012.08.20. & Hibás konvertáló modul elvetése, új megoldás keresése \\ & 2012.08.21. & Beautiful Soup modul alkalmazása \\ & 2012.08.22. & Alapvető navigálás a html fában a modullal \\ & 2012.08.23. & Trouble Riportok (TR) kinyerése \\ & 2012.08.24. & TR modulokhoz tartozó környezet kinyerése \\ \hline
-		\multirow{5}{*}{4. hét} & 2012.08.27. & TR modulokhoz tartozó további adatok kinyerése \\ & 2012.08.28. & Szkript tesztelése, eredmények összevetése az eredetivel \\ & 2012.08.29. & Rowspan probléma kiküszöbölése \\ & 2012.08.30. & Több TR egy mezőben probléma megoldása \\ & 2012.08.31. & Prezentáció megtartása, program átadása
-    \end{tabular*}
-\end{table}
-\\[40pt] Vállalati konzulens: \hfill .......................................................
-%
-\newpage
-\section{Időbeosztás részletezése}
-Az alábbi táblazatban számolok el a 160 kontaktórával:
-%
-\begin{table}[h!]
-\centering
-    \begin{tabular}{l|r}
-        \emph{Ismerkedés a Python nyelvvel és a Beautiful Soup modullal} & 40 óra \\ \hline
-		\emph{Dokumentációk átalakítása, átalakítók tesztelése}& 18 óra \\ \hline
-		\emph{Szkript elkésztése, tesztelése} & 80 óra \\ \hline
-		\emph{Vállalati infrastruktúra megismerése, laborlátogatás} & 6 óra  \\ \hline
-		\emph{Szkript átadásra előkészítése, prezentációra való felkészülés} & 8 óra \\ \hline
-		\emph{Elvégzett munka ismertetése, szkript bemutatása,} & \multirow{2}{*}{8 óra} \\ 
-					\emph{Python képzés megtartása} \\ \hline \hline
-		\textbf{Szum} & 160 óra \\ \hline
-    \end{tabular}
-\end{table}
-\\[40pt] Vállalati konzulens: \hfill .......................................................
+\begin{center}
+        \includegraphics[width=14cm]{nav_diag.png}
+        \captionof{figure}{Navigációs diagram}
+        \label{fig:nav-diag}
+\end{center}
+\begin{center}
+        \includegraphics[width=14cm]{webclass.png}
+        \captionof{figure}{Backing beanek}
+        \label{fig:webclass}
+\end{center}
+\subsection{Webszolgáltatás }
+\verb+ListAccDeliveryService+ -- kilistázza azon küldeményeket, amikhez tartozik futár
+(azaz elvállalta valaki a küldemény teljesítését)
 \end{document}
